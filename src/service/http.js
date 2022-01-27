@@ -1,10 +1,15 @@
 import axios from 'axios';
 
+
+const baseUrl = process.env.REACT_APP_BASE_API_URL;
+const apiKey = process.env.REACT_APP_API_KEY;
+const apiHost = process.env.REACT_APP_API_HOST;
+
 const http = axios.create({
-    baseURL: 'https://priceline-com-provider.p.rapidapi.com',
+    baseURL: baseUrl,
     headers: {
-        'x-rapidapi-host': 'priceline-com-provider.p.rapidapi.com',
-        'x-rapidapi-key': '5526512f05msh9e1f02901c135f9p1f560bjsnee0037821810'
+        'x-rapidapi-host': apiHost,
+        'x-rapidapi-key': apiKey
     }
 })
 
