@@ -1,8 +1,47 @@
-import { StyleSheet, View, Text } from "react-native"
+import { StyleSheet, View, Text, ToastAndroid } from "react-native"
 import { Input, Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
+import { useState } from "react";
+import useAuth from "../../libs/auth"
+import { useDispatch } from "react-redux";
+import { SET_AUTHENTICATED, SET_USER } from "../../store/slicers/user";
 
-export default Login = () => {
+export default Login = ({ navigation }) => {
+
+    const dispatch = useDispatch()
+    const { handleLogin } = useAuth()
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [isVisiblePassword, setIsVisiblePassword] = useState(false)
+    const [isError, setIsError] = useState(false)
+
+    const showToast = (children) => {
+        ToastAndroid.show(children, ToastAndroid.LONG);
+    };
+
+    const handlePressAuth = () => {
+        setIsError(false)
+        const isLogin = handleLogin(email, password)
+        if (isLogin) {
+            const user = {
+                email,
+                password
+            }
+            dispatch(SET_USER(user))
+            dispatch(SET_AUTHENTICATED(true))
+            if (navigation.canGoBack()) {
+                navigation.goBack()
+            } else {
+                navigation.navigate('Index')
+            }
+
+            return showToast('Login Success!');
+        }
+        setIsError(true)
+        return showToast('Username or password is wrong!')
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.sectionOne}>
@@ -10,18 +49,25 @@ export default Login = () => {
             </View>
             <View style={styles.sectionForm}>
                 <Input
-                    placeholder='Username'
+                    placeholder='Email'
+                    autoComplete="email"
+                    onChangeText={(e) => setEmail(e)}
                     leftIcon={
-                        <Ionicons name="person" size={18} />
+                        <Ionicons name="mail" size={18} style={{ marginRight: 10 }} />
                     }
+                    errorMessage={isError && 'Username or password is wrong'}
                 />
                 <Input
-                    placeholder='Username'
+                    placeholder='Password'
+                    onChangeText={(e) => setPassword(e)}
+                    secureTextEntry={isVisiblePassword ? false : true}
                     leftIcon={
-                        <Ionicons name="eye-off" size={18} />
+                        <Ionicons onPress={() => setIsVisiblePassword(!isVisiblePassword)} name={isVisiblePassword ? 'eye' : 'eye-off'} size={18} style={{ marginRight: 10 }} />
                     }
+                    errorMessage={isError && 'Username or password is wrong'}
                 />
                 <Button
+                    onPress={() => handlePressAuth()}
                     title="Login"
                     titleStyle={{ fontWeight: '600' }}
                     buttonStyle={{
