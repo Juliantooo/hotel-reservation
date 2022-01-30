@@ -5,10 +5,14 @@ import http from "../../service/http"
 import HeroDetailHotel from './parts/hero'
 import Review from "./parts/review"
 import Facility from "./parts/facility"
+import useAuth from '../../libs/auth'
 
 
 export default DetailItem = ({ route, navigation }) => {
+
     const { hotelId, price } = route.params
+    const { isAuthenticated } = useAuth()
+
     const [detailHotel, setDetailHotel] = useState(null)
 
     const getDetailHotel = async () => {
@@ -21,6 +25,9 @@ export default DetailItem = ({ route, navigation }) => {
     }
 
     const handlePressBooking = () => {
+        if (!isAuthenticated) {
+            return navigation.navigate('Login')
+        }
         navigation.navigate('Booking', { hotelId, price })
     }
 
