@@ -11,6 +11,7 @@ export default Profile = ({ navigation }) => {
 
     const favoriteHotels = useSelector(state => state.hotels.hotels.favorites)
     const orderedHotels = useSelector(state => state.hotels.hotels.ordered)
+    const user = useSelector(state => state.user.user)
 
     const [display, setDisplay] = useState(ORDERED)
 
@@ -39,6 +40,7 @@ export default Profile = ({ navigation }) => {
                 handlePressBooking={handlePressBooking}
                 handlePressFavorite={handlePressFavorite}
                 display={display}
+                user={user}
             />
             {
                 display === ORDERED ?
