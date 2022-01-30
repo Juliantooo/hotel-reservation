@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { TextInput, View, Picker, Text, StyleSheet, TouchableOpacity, ToastAndroid } from "react-native"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { GET_HOTEL_DETAIL } from "../../service/api-path"
 import http from "../../service/http"
 import { ADD_ORDERED_HOTEL } from "../../store/slicers/hotels"
@@ -9,10 +9,11 @@ import { ADD_ORDERED_HOTEL } from "../../store/slicers/hotels"
 export default Booking = ({ navigation, route }) => {
 
     const dispatch = useDispatch()
+    const user = useSelector(state => state.user.user)
 
     const { hotelId, price } = route.params
     const [detailHotel, setDetailHotel] = useState(null)
-    const [name, setName] = useState('')
+    const [name, setName] = useState()
     const [email, setEmail] = useState('')
     const [days, setDays] = useState(1)
     const [phoneNumberPrefix, setPhoneNumberPrefix] = useState('+62')
@@ -41,7 +42,7 @@ export default Booking = ({ navigation, route }) => {
             name,
             email,
             days,
-            phoneNumber: `${phoneNumberPrefix}${phoneNumber}`,
+            phoneNumber: phoneNumber.includes(phoneNumberPrefix) ? phoneNumber : `${phoneNumberPrefix}${phoneNumber}`,
             hotel: detailHotel,
             price: totalPayment()
         }))
@@ -54,15 +55,26 @@ export default Booking = ({ navigation, route }) => {
 
     useEffect(() => {
         getDetailHotel()
+        setEmail(user.email)
+        if (user.firstName) {
+            setName(`${user.firstName} ${user.lastName}`)
+        }
+        if (user.phoneNumber) {
+            setPhoneNumber(user.phoneNumber.slice(3, -1))
+        }
     }, [])
 
     return (
         <View style={styles.container}>
             <View style={{ padding: 20 }}>
                 <Text style={styles.textTitle}>CONTACT INFORMATIONS</Text>
-                <TextInput style={styles.input} placeholder="Fullname" autoComplete="name" onChangeText={(e) => setName(e)} />
-                <TextInput style={styles.input} placeholder="Email" autoComplete="email" onChangeText={(e) => setEmail(e)} />
-                <TextInput style={styles.input} placeholder="Number of days" onChangeText={(e) => setDays(e)} />
+                <Text style={styles.textLabel}>Full name</Text>
+                <TextInput style={styles.input} placeholder="Fullname" autoComplete="name" value={name} onChangeText={(e) => setName(e)} />
+                <Text style={styles.textLabel}>Email</Text>
+                <TextInput style={styles.input} placeholder="Email" autoComplete="email" value={email} onChangeText={(e) => setEmail(e)} />
+                <Text style={styles.textLabel}>How many day</Text>
+                <TextInput style={styles.input} placeholder="Number of days" value={days.toString()} onChangeText={(e) => setDays(e)} />
+                <Text style={styles.textLabel}>Phone number</Text>
                 <View style={styles.pickerContainer}>
                     <View style={{ backgroundColor: '#fff', borderRadius: 7, marginRight: 10 }}>
                         <Picker
@@ -73,7 +85,12 @@ export default Booking = ({ navigation, route }) => {
                             <Picker.Item label="+62" value="+62" />
                         </Picker>
                     </View>
-                    <TextInput style={styles.input} placeholder="Phone number" onChangeText={(e) => setPhoneNumber(e)} />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Phone number"
+                        value={phoneNumber}
+                        onChangeText={(e) => setPhoneNumber(e)}
+                    />
                 </View>
                 <Text style={styles.textTitle}>BOOKING SUMMARY</Text>
                 <View style={styles.summaryContainer}>
@@ -84,6 +101,7 @@ export default Booking = ({ navigation, route }) => {
                         <Text style={styles.textPrice}>$ {totalPayment()}</Text>
                     </View>
                 </View>
+                <Text style={[styles.textLabel, { color: '#e30000' }]}>* Biodata in this form will be used for check in identity. And by default use your account profile</Text>
             </View>
             <TouchableOpacity style={styles.floatingButton} onPress={() => handlePressBooking()} >
                 <Text style={styles.bookButtonText}>Chekcout</Text>
@@ -167,5 +185,9 @@ const styles = StyleSheet.create({
     underline: {
         borderBottomWidth: 2,
         marginTop: 10
+    },
+    textLabel: {
+        fontWeight: 'bold',
+        marginTop: 11,
     }
 })
