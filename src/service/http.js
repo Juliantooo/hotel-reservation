@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-
 const baseUrl = process.env.REACT_APP_BASE_API_URL;
 const apiKey = process.env.REACT_APP_API_KEY;
 const apiHost = process.env.REACT_APP_API_HOST;
@@ -12,8 +11,6 @@ const http = axios.create({
         'x-rapidapi-key': apiKey
     }
 })
-
-
 
 const parseResponse = (response) => {
     return {
