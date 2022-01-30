@@ -4,17 +4,25 @@ import { Ionicons } from '@expo/vector-icons';
 
 const dummyAvatar = 'https://img.freepik.com/free-photo/waist-up-portrait-handsome-serious-unshaven-male-keeps-hands-together-dressed-dark-blue-shirt-has-talk-with-interlocutor-stands-against-white-wall-self-confident-man-freelancer_273609-16320.jpg?size=626&ext=jpg'
 
-export default ProfileSummary = ({ onPress, orders, favorites, display, handlePressBooking, handlePressFavorite }) => {
+export default ProfileSummary = ({ onPress, orders, favorites, display, user, handlePressBooking, handlePressFavorite }) => {
     return (
         <View style={[styles.container, styles.boxShadow]}>
             <View style={[styles.flexRow, styles.justifyBetween, styles.alignCenter, styles.underLine, { padding: 20 }]}>
-                <Image
-                    source={{ uri: dummyAvatar }}
-                    containerStyle={styles.item}
-                />
+                {
+                    user.email ?
+                        (
+                            <Image
+                                source={{ uri: dummyAvatar }}
+                                containerStyle={styles.item}
+                            />
+                        )
+                        : (
+                            <Text style={{ fontWeight: 'bold', fontSize: 17 }}>You're not log in</Text>
+                        )
+                }
                 <View style={styles.about}>
-                    <Text style={[styles.textTitle, styles.textCenter]}>Fajar Julianto</Text>
-                    <Text style={[styles.textSmall, styles.textCenter]}>fajar.email@gmail.com</Text>
+                    <Text style={[styles.textTitle, styles.textCenter]}>{user.firstName ? `${user.firstName} ${user.lastName}` : user.email}</Text>
+                    <Text style={[styles.textSmall, styles.textCenter]}>{user.email}</Text>
                 </View>
                 <TouchableOpacity style={styles.settingIcon} onPress={onPress}>
                     <Ionicons name="settings" color='#489687' size={25} />
@@ -63,7 +71,7 @@ const styles = StyleSheet.create({
         borderColor: '#d6d6d6',
     },
     textTitle: {
-        fontSize: 23,
+        fontSize: 18,
         fontWeight: 'bold'
     },
     textSmall: {
