@@ -12,7 +12,7 @@ export default Feed = ({ title, items }) => {
                         return (
                             <View key={idx}>
                                 <Image
-                                    source={{ uri: `https:${item.thumbnail}` }}
+                                    source={{ uri: item.thumbnail }}
                                     containerStyle={styles.item}
                                     PlaceholderContent={<ActivityIndicator />}
                                 />
