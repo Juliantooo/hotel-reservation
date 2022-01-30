@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Booking from './src/pages/booking/booking';
 import Detail from './src/pages/detail/detail';
 import IndexHome from './src/pages/home'
+import Login from './src/pages/login/login'
 import { Ionicons } from '@expo/vector-icons';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
@@ -53,6 +54,13 @@ export default function App() {
                   onPress={() => navigation.goBack()}
                 />
               ),
+            })}
+          />
+          <HomeStack.Screen
+            name='Login'
+            component={Login}
+            options={() => ({
+              headerShown: false
             })}
           />
         </HomeStack.Navigator>
