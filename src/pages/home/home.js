@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import { SEARCH_HOTEL, SEARCH_LOCATION, GET_HOTEL_SUGESTION } from "../../service/api-path";
 import { useDispatch, useSelector } from "react-redux";
 import { ADD_FAVORITE_HOTEL, REMOVE_FAVORITE_HOTEL } from "../../store/slicers/hotels";
+import useAuth from '../../libs/auth'
 
 const TODAY = dayjs().format('YYYY-MM-DD');
 const HOTEL = 'HOTEL'
@@ -16,6 +17,7 @@ const HOTEL = 'HOTEL'
 export default Home = ({ navigation }) => {
 
     const dispatch = useDispatch();
+    const { isAuthenticated } = useAuth()
 
     const favoriteHotels = useSelector(state => state.hotels.hotels.favorites)
 
@@ -82,6 +84,9 @@ export default Home = ({ navigation }) => {
     }
 
     const handleClickFavorite = (hotel, isFavorited) => {
+        if (!isAuthenticated) {
+            return navigation.navigate('Login')
+        }
         isFavorited ? dispatch(REMOVE_FAVORITE_HOTEL(hotel)) : dispatch(ADD_FAVORITE_HOTEL(hotel))
     }
 

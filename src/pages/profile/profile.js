@@ -44,18 +44,22 @@ export default Profile = ({ navigation }) => {
             />
             {
                 display === ORDERED ?
-                    orderedHotels.map((order) => (
-                        < ItemCardHorizontal
-                            key={order.hotel.hotelId}
-                            id={order.hotel.hotelId}
-                            name={order.hotel.name}
-                            rating={order.hotel.starRating}
-                            price={order.price}
-                            image={order.hotel.thumbnailUrl}
-                            city={order.hotel.location.address.cityName.split(' ').pop()}
-                            handleClickItemCard={handleClickItemCard}
-                        />
-                    ))
+                    orderedHotels.map((order) => {
+                        return (
+                            order.hotel?.hotelId &&
+                            < ItemCardHorizontal
+                                key={order.hotel.hotelId}
+                                id={order.hotel.hotelId}
+                                name={order.hotel.name}
+                                rating={order.hotel.starRating}
+                                price={order.price}
+                                image={order.hotel.thumbnailUrl}
+                                city={order.hotel.location.address.cityName.split(' ').pop()}
+                                handleClickItemCard={handleClickItemCard}
+                            />
+                        )
+                    }
+                    )
                     :
                     favoriteHotels.map((hotel) => (
                         < ItemCardHorizontal
