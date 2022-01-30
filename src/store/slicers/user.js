@@ -1,21 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    user: null
+    user: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        gender: '',
+        phone: ''
+    },
+    isAuthenticated: false
 }
 
-export const hotels = createSlice({
+export const user = createSlice({
     name: 'user',
     initialState,
     reducers: {
         SET_USER: (state, action) => {
-            state.user = action.payload
+            state.user = { ...state.user, ...action.payload }
+            console.log(state.user)
+        },
+        SET_AUTHENTICATED: (state, action) => {
+            state.isAuthenticated = action.payload
         },
     }
 })
 
 export const {
     SET_USER,
+    SET_AUTHENTICATED
 } = user.actions
 
 export default user.reducer
